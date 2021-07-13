@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "Control-Board-rescue")(type "Legacy")(uri "${KIPRJMOD}/Control-Board-rescue.lib")(options "")(descr ""))
+  (lib (name "rtc_ds3231_inverted")(type "KiCad")(uri "${KIPRJMOD}/libraries/rtc_ds3231_inverted.kicad_sym")(options "")(descr ""))
+)

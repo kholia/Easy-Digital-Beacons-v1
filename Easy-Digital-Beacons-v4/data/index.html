@@ -1,0 +1,84 @@
+<!doctype html>
+<!--
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com
+
+  https://randomnerdtutorials.com/esp8266-web-server-spiffs-nodemcu/
+-->
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <!-- link href="bootstrap.css" rel="stylesheet" -->
+    <link href="style.css" rel="stylesheet">
+
+    <title>Digital Radio Beacon</title>
+</head>
+
+<body>
+    <h1>Digital Radio Beacon</h1>
+    <p>LED state <strong>%STATE%</strong></p>
+    <p>
+        <a href="/on"><button class="button">ON</button></a>
+        <a href="/off"><button class="button button2">OFF</button></a>
+        <a href="/led_flash"><button class="button">LED Flash</button></a>
+    </p>
+
+    <p>VFO OK <strong>%VFO_OK%</strong></p>
+    <p>RTC Lost Power <strong>%RTC_LOST_POWER_STATE%</strong></p>
+    <p>Temperature <strong><span id="temperature">%TEMPERATURE% &deg;C</span></strong></p>
+    <p>Time <strong><span id="time">%TIME%</span></strong></p>
+
+    <p>Current Delta <strong>%DELTA%</strong></p>
+
+    <p>
+        <a href="/ntp_sync"><button class="button">NTP Sync</button></a>
+        <a href="/delta_plus"><button class="button button2">Inc 25ms</button></a>
+        <a href="/delta_minus"><button class="button button2">Dec 25ms</button></a>
+        <a href="/tune"><button class="button">Short Tune (7s)</button></a>
+        <a href="/tune_long"><button class="button">Long Tune (30s)</button></a>
+        <a href="/tune_power"><button class="button">Full-Power Tune (7s)</button></a>
+    </p>
+
+    <p>
+        <a href="/ptt_on"><button class="button button2">PTT ON</button></a>
+        <a href="/ptt_off"><button class="button">PTT OFF</button></a>
+    </p>
+
+    <p>Current Mode <strong>%MODE%</strong></p>
+    <p>Time Delta Hack Enabled <strong>%TIME_DELTA_HACK_ENABLED%</strong></p>
+    <p>
+        <a href="/mode_ft8"><button class="button button2">FT8 Mode</button></a>
+        <a href="/mode_ft4"><button class="button button2">FT4 Mode</button></a>
+        <a href="/mode_wspr"><button class="button button2">WSPR Mode</button></a>
+        <a href="/time_delta_hack_enable"><button class="button">Enable Time Hack</button></a>
+        <a href="/time_delta_hack_disable"><button class="button button2">Disable Time Hack</button></a>
+    </p>
+
+    <p>Current FT8 Message <strong>%FT8_MESSAGE%</strong></p>
+
+    <form action="/set_frequency">
+        <p>Frequency <input type="text" id="frequency" name="frequency" value="%FREQUENCY%"></p>
+        <p><input type="submit" value="Change Frequency" class="button button2">
+    </form>
+
+    <script>
+        setInterval(function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("time").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "/time", true);
+            xhttp.send();
+        }, 1000);
+    </script>
+
+</body>
+
+</html>
