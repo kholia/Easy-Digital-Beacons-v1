@@ -27,7 +27,7 @@ If you are using Windows OS, execute the following steps:
 
 - Install https://github.com/me-no-dev/ESPAsyncWebServer library.
 
-- Install https://github.com/me-no-dev/ESPAsyncTC library.
+- Install https://github.com/me-no-dev/ESPAsyncTCP library.
 
 If you are on Linux, execute the following steps:
 
@@ -281,6 +281,8 @@ Replace the original `FST4Wsymbols` array data with the output of
 
 
 #### References + Credits
+
+- https://github.com/kholia/Si5351-Module-Clone-TCXO/ (use this module - it rocks!)
 
 - https://github.com/kholia/Easy-Transceiver
 

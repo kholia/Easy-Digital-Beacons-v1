@@ -40,7 +40,7 @@
 #include <FS.h>
 #include <Wire.h>
 #include <RTClib.h>
-#include <si5351.h>
+#include "si5351.h"
 #include <TimeLib.h>
 #include <WiFiUdp.h>
 #include <NTPClient.h>
@@ -211,7 +211,7 @@ void jtTransmitMessage()
 
   Serial.println("TX!");
   txEnabled = true;
-  updateDisplay();
+  // updateDisplay();
   // Reset the tone to the base frequency and turn on the output
   si5351.set_clock_pwr(SI5351_CLK0, 1);
   si5351.output_enable(SI5351_CLK0, 1);
@@ -230,7 +230,7 @@ void jtTransmitMessage()
   digitalWrite(PTT_PIN, LOW);
   digitalWrite(LED_BUILTIN, HIGH);
   txEnabled = false;
-  updateDisplay();
+  // updateDisplay();
 }
 
 void setTxBuffer()
@@ -545,25 +545,6 @@ void setup()
   Serial.print("Si5351 init status (should be 1 always) = ");
   Serial.println(ret);
 
-  // Figure out the mode to run
-  buttonState = digitalRead(BUTTON_PIN);
-  if (buttonState == HIGH) {
-    // Connect to Wi-Fi
-    WiFi.hostname("beacon");
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED)
-    {
-      delay(1000);
-      Serial.println("Connecting to WiFi...");
-    }
-    Serial.println(WiFi.localIP());
-    if (MDNS.begin("beacon"))
-    {
-      Serial.println("MDNS started");
-    }
-    timeClient.begin();
-  }
-
   // Initialize the rtc
   if (!rtc.begin()) {
     Serial.println("Couldn't find RTC!");
@@ -609,6 +590,26 @@ void setup()
     }
   }
 
+  // Figure out the mode to run
+  buttonState = digitalRead(BUTTON_PIN);
+  if (buttonState == HIGH) {
+    // Connect to Wi-Fi
+    WiFi.hostname("beacon");
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED)
+    {
+      delay(1000);
+      Serial.println("Connecting to WiFi...");
+    }
+    Serial.println(WiFi.localIP());
+    if (MDNS.begin("beacon"))
+    {
+      Serial.println("MDNS started");
+    }
+    timeClient.begin();
+  }
+
+
   // Sanity checks
   if (!vfo_ok) {
     Serial.println("Check VFO connections!");
@@ -623,6 +624,7 @@ void setup()
 
   if (buttonState == HIGH || rtc_lost_power || !vfo_ok) {
     beacon_enabled = 0;
+
 
     // Initialize SPIFFS
     if (!SPIFFS.begin())
@@ -803,7 +805,7 @@ void setup()
     beacon_enabled = 1;
     delay(3000);
     Serial.print("Working in beacon mode -> ");
-    Serial.println(processor("MODE"));
+    // Serial.println(processor("MODE"));
     led_flash();
   }
 
@@ -819,16 +821,16 @@ void setup()
 #endif
 
   // Initialising the UI
-  display.init();
-  display.flipScreenVertically();
-  display.setFont(ArialMT_Plain_10);
-  updateDisplay();
+  /* display.init();
+    display.flipScreenVertically();
+    display.setFont(ArialMT_Plain_10);
+    updateDisplay(); */
 }
 
 // main loop
 void loop()
 {
-  updateDisplay();
+  // updateDisplay();
   delay(100);
 
 #ifdef ENABLE_WSTJX_MODE
@@ -1086,8 +1088,8 @@ void loop()
   if (beacon_enabled) {
     dt = rtc.now();
     if (time_delta_hack_enabled == 1 && (dt.second() % 15 == 14) && mode == FT8) { // Check for 14th, 29th, 44th, 59th second
-    // if (time_delta_hack_enabled == 1 && (dt.second() == 14 || dt.second() == 44) && mode == FT8) { // TX 2 times every minute
-    // if (time_delta_hack_enabled == 1 && (dt.second() == 14) && mode == FT8) { // TX once every minute
+      // if (time_delta_hack_enabled == 1 && (dt.second() == 14 || dt.second() == 44) && mode == FT8) { // TX 2 times every minute
+      // if (time_delta_hack_enabled == 1 && (dt.second() == 14) && mode == FT8) { // TX once every minute
       delay(delta);
       jtTransmitMessage();
     }

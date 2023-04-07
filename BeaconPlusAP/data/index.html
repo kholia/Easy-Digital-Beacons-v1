@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com
+
+  https://randomnerdtutorials.com/esp8266-web-server-spiffs-nodemcu/
+-->
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <!-- link href="bootstrap.css" rel="stylesheet" -->
+    <link href="style.css" rel="stylesheet">
+
+    <title>Digital Radio - WSPR Beacon</title>
+</head>
+
+<body>
+    <h1>Digital Radio - WSPR Beacon</h1>
+    <p>LED state <strong>%STATE%</strong></p>
+    <p>
+        <a href="/on"><button class="button">ON</button></a>
+        <a href="/off"><button class="button button2">OFF</button></a>
+        <a href="/led_flash"><button class="button">LED Flash</button></a>
+    </p>
+
+    <p>VFO OK <strong>%VFO_OK%</strong></p>
+    <p>Time <strong><span id="time">%TIME%</span></strong></p>
+    <p>Synchronized <strong><span id="synchronized">%SYNCHRONIZED%</span></strong></p>
+
+    <p>
+        <a href="/ntp_sync"><button class="button">NTP Sync</button></a>
+        <a href="/tune"><button class="button">Short Tune (7s)</button></a>
+        <a href="/tune_long"><button class="button">Long Tune (30s)</button></a>
+    </p>
+
+    <p>Current WSPR Message <strong><span id="message">%CURRENT_WSPR_MESSAGE%</span></strong></p>
+
+    <p>Change WSPR Message</p>
+    <form action="/set_message">
+        <input type="radio" id="m0" name="message" value="0" checked="true">
+        <label for="m0">Default WSPR Message</label><br>
+        <input type="radio" id="m1" name="message" value="30">
+        <label for="m1">I am OK</label><br>
+        <input type="radio" id="m2" name="message" value="33">
+        <label for="m2">I am NOT OK</label><br>
+        <input type="radio" id="m3" name="message" value="37">
+        <label for="m3">Please check on me!</label><br><br>
+        <input type="submit" value="Submit" class="button button1">
+    </form>
+
+    <form action="/set_frequency">
+        <p>Frequency <input type="text" id="frequency" name="frequency" value="%FREQUENCY%"></p>
+        <p><input type="submit" value="Change Frequency" class="button button2">
+    </form>
+
+    <form action="/set_calibration">
+        <p>Calibration <input type="text" id="calibration" name="calibration" value="%CALIBRATION%"></p>
+        <p><input type="submit" value="Change Calibration" class="button button1">
+    </form>
+
+    <script>
+        setInterval(function() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("time").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "/time", true);
+            xhttp.send();
+        }, 1000);
+    </script>
+
+</body>
+
+</html>
